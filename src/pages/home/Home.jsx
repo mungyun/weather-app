@@ -25,6 +25,6 @@ const Home = () => {
 export default Home;
 
 const StyledHome = styled.div`
-  width: 1200px;
+  width: 830px;
   margin: 0 auto;
 `;
