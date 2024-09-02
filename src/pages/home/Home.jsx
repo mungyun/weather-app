@@ -1,24 +1,31 @@
-import { useEffect } from "react";
-import getWeather from "../../api/getWeather";
 import styled from "styled-components";
 import Header from "../../components/Header";
 import HomeContent from "./components/HomeContent";
+import WeatherList from "./components/WeatherList";
+import { createContext, useEffect, useState } from "react";
+
+export const HomeStateContext = createContext();
+export const HomeDispatchContext = createContext();
 
 const Home = () => {
-  const getData = async () => {
-    const data = await getWeather();
-    console.log(data);
-  };
+  const [datas, setDatas] = useState([]);
 
   useEffect(() => {
-    getData();
-  }, []);
+    console.log(datas);
+  }, [datas]);
 
   return (
-    <StyledHome>
+    <>
       <Header />
-      <HomeContent />
-    </StyledHome>
+      <HomeStateContext.Provider value={datas}>
+        <HomeDispatchContext.Provider value={setDatas}>
+          <StyledHome>
+            <HomeContent />
+            <WeatherList />
+          </StyledHome>
+        </HomeDispatchContext.Provider>
+      </HomeStateContext.Provider>
+    </>
   );
 };
 
