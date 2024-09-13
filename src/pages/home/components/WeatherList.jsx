@@ -1,12 +1,29 @@
 import styled from "styled-components";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { HomeDispatchContext, HomeStateContext } from "../Home";
 import WeatherListItem from "./WeatherListItem";
 import BookmarkImg from "../../../assets/icon/bookmark.svg";
+import { useAtom } from "jotai";
+import { mydatasAtom } from "../../../state";
 
 const WeatherList = () => {
   const datas = useContext(HomeStateContext);
   const setDatas = useContext(HomeDispatchContext);
+  const [myDatas, setMyDatas] = useAtom(mydatasAtom);
+
+  useEffect(() => {
+    const savedDatas = localStorage.getItem("MyDatas");
+    if (savedDatas) {
+      setMyDatas(JSON.parse(savedDatas));
+    }
+  }, [setMyDatas]);
+  useEffect(() => {
+    localStorage.setItem("MyDatas", JSON.stringify(myDatas));
+  }, [myDatas]);
+
+  const handleAdd = (data) => {
+    setMyDatas((prevDatas) => [data, ...prevDatas]);
+  };
 
   const handleDelete = (id) => {
     setDatas(datas.filter((data) => data.id !== id));
@@ -18,7 +35,12 @@ const WeatherList = () => {
         <StyledWeatherList>
           {datas.map((data) => (
             <li key={data.id}>
-              <WeatherListItem data={data} onDelete={handleDelete} />
+              <WeatherListItem
+                data={data}
+                onAdd={handleAdd}
+                onDelete={handleDelete}
+                myDatas={myDatas}
+              />
             </li>
           ))}
         </StyledWeatherList>

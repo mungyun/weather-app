@@ -7,6 +7,7 @@ import { HomeDispatchContext } from "../Home";
 const HomeContent = () => {
   const [city, setCity] = useState("");
   const [comment, setComment] = useState("");
+  const [error, setError] = useState("");
   const setDatas = useContext(HomeDispatchContext);
 
   const getData = useCallback(
@@ -14,7 +15,13 @@ const HomeContent = () => {
       if (!city) return;
 
       const data = await getWeather(city);
-      setDatas((prevDatas) => [data, ...prevDatas]);
+
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setError("");
+        setDatas((prevDatas) => [data, ...prevDatas]);
+      }
     },
     [setDatas]
   );
@@ -34,6 +41,10 @@ const HomeContent = () => {
     }
   };
 
+  const handleFocus = () => {
+    setError("");
+  };
+
   return (
     <StyledHomeContent>
       <Title>
@@ -44,11 +55,13 @@ const HomeContent = () => {
         <SearchBarInput
           onChange={handleChange}
           onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
           value={comment}
           type="text"
           placeholder="날씨가 궁금한 도시를 검색해주세요."
         />
       </SeachBar>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </StyledHomeContent>
   );
 };
@@ -58,7 +71,6 @@ export default HomeContent;
 const StyledHomeContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 41px;
 `;
 
 const Title = styled.h1`
@@ -80,6 +92,7 @@ const SeachBar = styled.div`
   border: 1px solid #000;
   border-radius: 24px;
   box-shadow: 0 5px 5px -5px;
+  margin-top: 41px;
 `;
 
 const SearchBarInput = styled.input`
@@ -89,8 +102,13 @@ const SearchBarInput = styled.input`
   font-size: 18px;
   &::placeholder {
     color: #5e5858;
-
     padding: 0;
   }
   outline: none;
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 16px;
+  margin: 10px 0 0 10px;
 `;

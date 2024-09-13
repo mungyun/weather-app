@@ -2,13 +2,27 @@ import styled from "styled-components";
 import ToCelsius from "../../../components/ToCelsius";
 import addImg from "../../../assets/icon/add.svg";
 import cancelImg from "../../../assets/icon/cancel.svg";
+import { toast } from "react-toastify";
 
-const WeatherListItem = ({ data, onDelete }) => {
-  const handleDelete = () => onDelete(data.id);
+const WeatherListItem = ({ data, onAdd, onDelete }) => {
+  const handleAdd = () => {
+    onAdd(data);
+    toast.success(`"${data.name}"가 추가되었습니다!`);
+  };
+
+  const handleDelete = () => {
+    onDelete(data.id);
+  };
 
   return (
     <StyledWeatherListItem>
-      <AddImg src={addImg} alt="추가" width="40" height="40" />
+      <AddImg
+        onClick={handleAdd}
+        src={addImg}
+        alt="추가"
+        width="40"
+        height="40"
+      />
       <CancelImg
         onClick={handleDelete}
         src={cancelImg}

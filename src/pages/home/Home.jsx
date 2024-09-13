@@ -2,17 +2,13 @@ import styled from "styled-components";
 import Header from "../../components/Header";
 import HomeContent from "./components/HomeContent";
 import WeatherList from "./components/WeatherList";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 export const HomeStateContext = createContext();
 export const HomeDispatchContext = createContext();
 
 const Home = () => {
   const [datas, setDatas] = useState([]);
-
-  useEffect(() => {
-    console.log(datas);
-  }, [datas]);
 
   return (
     <>
